@@ -1,4 +1,4 @@
-<h2>Weather console app using Node.js
+<h2>Weather console app using Node.js</h2>
 
 This is a weather console app made using Node.js.
 
