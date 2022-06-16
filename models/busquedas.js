@@ -8,8 +8,12 @@ class Busquedas {
         // TODO: if DB exists, read the DB
     }
 
-    async getCoordenadas(){
-        
+    get paramsWeather(){
+        return {
+            appid: process.env.OPENWEATHER_KEY,
+            lang: 'es',
+            units: 'metric',
+        }
     } 
 
     async ciudad( lugar = '' ) {
@@ -43,29 +47,19 @@ class Busquedas {
         try {
             // instance axios.create
             const instance = axios.create({
-                baseURL: `https://api.openweathermap.org/data/2.5/weather?lat=${ lat }&lon=${ lon }`,
-                params: {
-                    'languaje': 'es',
-                    'units': 'metric',
-                    'appid': process.env.OPENWEATHER_KEY
-                }
+                baseURL: `https://api.openweathermap.org/data/2.5/weather`,
+                params: { ...this.paramsWeather, lat, lon }
             });
 
             // resp.data
             const resp = await instance.get();
-            const respWeather = resp.data.weather.map( obj => {
-                let desc = Object.values(obj)
-                let text = desc[2]
-                return text
-            });
-
-            const respTemperatures = resp.data.main;
+            const { weather, main } = resp.data;
 
             return {
-                desc: respWeather.toString(),
-                min: respTemperatures.temp_min,
-                max: respTemperatures.temp_max,
-                temp: respTemperatures.temp,
+                desc: weather[0].description,
+                min: main.temp_min,
+                max: main.temp_max,
+                temp: main.temp,
             }
 
         } catch (error) {
