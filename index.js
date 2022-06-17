@@ -18,27 +18,42 @@ const main = async() => {
             case 1:
             
             // Buscar lugares
-            const busqueda = await leerInput('Ciudad: ');
+                const busqueda = await leerInput('Ciudad: ');
 
-            // Seleccionar el lugar
-            const lugares = await busquedas.ciudad( busqueda );
-            const id = await listadoLugares(lugares);
-            const lugarSeleccionado = lugares.find(lugar => lugar.id === id);
-            
-            // Clima 
-            const clima = await busquedas.climaLugar( lugarSeleccionado.lat, lugarSeleccionado.lng );
+                // Seleccionar el lugar
+                const lugares = await busquedas.ciudad( busqueda );
+                const id = await listadoLugares(lugares);
+                if (id === '0') continue;
 
-            console.clear();
-            console.log('\nInformación de la ciudad\n'.cyan);
-            console.log('Ciudad:', lugarSeleccionado.nombre); 
-            console.log('Lat:', lugarSeleccionado.lat); 
-            console.log('Lng:', lugarSeleccionado.lng);
-            console.log('Temperatura:', clima.temp)
-            console.log('Temp Min:', clima.min)
-            console.log('Temp Max:', clima.max)
-            console.log('El clima esta:', clima.desc)
+                const lugarSeleccionado = lugares.find(lugar => lugar.id === id);
+
+                busquedas.agregarHistorial(lugarSeleccionado.nombre);
+
+
+                // Clima 
+                const clima = await busquedas.climaLugar( lugarSeleccionado.lat, lugarSeleccionado.lng );
+
+                console.clear();
+                console.log('\nInformación de la ciudad\n'.cyan);
+                console.log('Ciudad:', lugarSeleccionado.nombre); 
+                console.log('Lat:', lugarSeleccionado.lat); 
+                console.log('Lng:', lugarSeleccionado.lng);
+                console.log('Temperatura:', clima.temp)
+                console.log('Temp Min:', clima.min)
+                console.log('Temp Max:', clima.max)
+                console.log('El clima esta:', clima.desc)
+
             break;
-            
+         
+            case 2:
+
+                busquedas.historialCapitalizado.forEach( ( lugar, i ) => {
+                    const idx = `${i + 1}.`.cyan;
+                    console.log(`${idx} ${lugar}`)
+                })
+
+            break;
+
         }
 
         if( opt !== 0 ) await pausa();
